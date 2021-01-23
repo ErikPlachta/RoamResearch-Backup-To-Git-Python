@@ -8,8 +8,8 @@ setup(
     version='0.1',
     license='MIT',
     description='Automatic RoamResearch backup to Git',
-    author='Matthieu Bizien',  # Type in your name
-    author_email='oao2005@gmail.com',  # Type in your E-Mail
+    author='Erik Plachta',  # Type in your name
+    author_email='eplachta@gmail.com',  # Type in your E-Mail
     url='https://github.com/ErikPlachta/roam-to-git',
     download_url='https://github.com/ErikPlachta/roam-to-git/archive/v0.1.tar.gz',
     keywords=['ROAMRESEARCH', 'GIT', 'BACKUP'],

@@ -1,3 +1,10 @@
+### Roam to Git 
+
+ **Automatic Incremntal Backups** of your RoamResearch database graph with GitHub Actions. It works by running a Python Application directly in a GitHub Repo that connects to the RoamResearch and backs up the data directly within the REPO. 
+> This is a fork of [MatthieuBizen's repo 🧠](https://github.com/MatthieuBizien/roam-to-git), who brilliantly built a free 'stress free' utility that takes the guess work and complexity out of backing up. If you're as thankful I am, let him know, and [check his repo here](https://github.com/ErikPlachta/roam-to-git#automatic-roamresearch-backup).
+
+
+<!--
 # Automatic RoamResearch backup
 
 [![Roam Research backup](https://github.com/MatthieuBizien/roam-to-git-demo/workflows/Roam%20Research%20backup/badge.svg)](https://github.com/MatthieuBizien/roam-to-git-demo/actions)
@@ -169,3 +176,4 @@ I will try my best to understand and help you, no SLA promised 😇
 - [ ] Test it/make it work on Windows
 - [x] Pre-configure a CI server so it can run every hour without a computer
     Thanks @Stvad for [#4](https://github.com/MatthieuBizien/roam-to-git/issues/4)!
+-->

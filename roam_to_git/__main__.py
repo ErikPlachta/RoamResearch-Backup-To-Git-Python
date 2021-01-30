@@ -10,9 +10,11 @@ import git
 from dotenv import load_dotenv
 from loguru import logger
 
+""" #removing markdown
 from roam_to_git.formatter import read_markdown_directory, format_markdown
 from roam_to_git.fs import reset_git_directory, unzip_markdown_archive, \
     unzip_and_save_json_archive, commit_git_directory, push_git_repository, save_markdowns
+""" #end of removing markdown
 from roam_to_git.scrapping import patch_pyppeteer, scrap, Config
 
 
@@ -66,6 +68,8 @@ def main():
     reset_git_directory(git_path / "formatted")
     if not args.skip_fetch:
         reset_git_directory(git_path / "json")
+      
+      """## Removing Markdown for now
         reset_git_directory(git_path / "markdown")
 
         with tempfile.TemporaryDirectory() as markdown_zip_path, \
@@ -84,7 +88,7 @@ def main():
 
     formatted = format_markdown(read_markdown_directory(git_path / "markdown"))
     save_markdowns(git_path / "formatted", formatted)
-
+    """ ### End of removing markdown
     if repo is not None:
         commit_git_directory(repo)
         if not args.skip_push:

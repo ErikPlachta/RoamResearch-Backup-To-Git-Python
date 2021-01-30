@@ -10,8 +10,8 @@ setup(
     description='Automatic RoamResearch backup to Git',
     author='Erik Plachta',  # Type in your name
     author_email='eplachta@gmail.com',  # Type in your E-Mail
-    url='https://github.com/ErikPlachta/roam-to-git',
-    download_url='https://github.com/ErikPlachta/roam-to-git/archive/v0.1.tar.gz',
+    url='https://github.com/ErikPlachta/RoamResearch-Complete-Backup-to-Git/',
+    download_url='https://github.com/ErikPlachta/RoamResearch-Complete-Backup-to-Git/archive/v0.1.tar.gz',
     keywords=['ROAMRESEARCH', 'GIT', 'BACKUP'],
     install_requires=[str(requirement) for requirement in
                       parse_requirements(open("requirements.txt"))],

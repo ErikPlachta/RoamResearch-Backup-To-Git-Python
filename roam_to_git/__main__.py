@@ -12,7 +12,7 @@ from loguru import logger
 
 
 from roam_to_git.scrapping import patch_pyppeteer, scrap, Config
-
+from roam_to_git.fs import reset_git_directory
 
 @logger.catch(reraise=True)
 def main():

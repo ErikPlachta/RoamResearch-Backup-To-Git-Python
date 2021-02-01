@@ -84,7 +84,6 @@ async def _download_rr_archive(document: Page,
                                config: Config,
                                ):
     """Download an archive in RoamResearch.
-
     :param output_type: Download JSON or Markdown
     :param output_directory: Directory where to stock the outputs
     """

@@ -10,9 +10,11 @@ import git
 from dotenv import load_dotenv
 from loguru import logger
 
-
+from roam_to_git.formatter import read_markdown_directory, format_markdown
+from roam_to_git.fs import reset_git_directory, unzip_markdown_archive, \
+    unzip_and_save_json_archive, commit_git_directory, push_git_repository, save_markdowns
 from roam_to_git.scrapping import patch_pyppeteer, scrap, Config
-from roam_to_git.fs import reset_git_directory
+
 
 @logger.catch(reraise=True)
 def main():
@@ -64,6 +66,25 @@ def main():
     reset_git_directory(git_path / "formatted")
     if not args.skip_fetch:
         reset_git_directory(git_path / "json")
+        reset_git_directory(git_path / "markdown")
+
+        with tempfile.TemporaryDirectory() as markdown_zip_path, \
+                tempfile.TemporaryDirectory() as json_zip_path:
+            markdown_zip_path = Path(markdown_zip_path)
+            json_zip_path = Path(json_zip_path)
+
+            scrap(markdown_zip_path, json_zip_path, config)
+            if config.debug:
+                logger.debug("waiting for the download...")
+                time.sleep(20)
+                return
+            raws = unzip_markdown_archive(markdown_zip_path)
+            save_markdowns(git_path / "markdown", raws)
+            unzip_and_save_json_archive(json_zip_path, git_path / "json")
+
+    formatted = format_markdown(read_markdown_directory(git_path / "markdown"))
+    save_markdowns(git_path / "formatted", formatted)
+
     if repo is not None:
         commit_git_directory(repo)
         if not args.skip_push:

@@ -128,7 +128,7 @@ async def _download_rr_archive(document: Page,
 
     logger.debug("Launch download popup")
     divs_pb3 = await document.querySelectorAll(".bp3-fill")
-    export_all, = [b for b in divs_pb3 if await get_text(document, b) == 'export all']
+    export_all, = [b for b in divs_pb3 if await get_text(document, b) == 'Export All']
     await export_all.click()
     await asyncio.sleep(config.sleep_duration)
 
@@ -137,7 +137,7 @@ async def _download_rr_archive(document: Page,
         assert dropdown_button is not None
         dropdown_button_text = await get_text(document, dropdown_button)
         # Defensive check if the interface change
-        assert dropdown_button_text in ["markdown", "json"], dropdown_button_text
+        assert dropdown_button_text in ["Markdown", "JSON"], dropdown_button_text
         return dropdown_button, dropdown_button_text
 
     logger.debug("Checking download type")
@@ -159,7 +159,7 @@ async def _download_rr_archive(document: Page,
 
     logger.debug("Downloading output of type {}", output_type)
     buttons = await document.querySelectorAll('button')
-    export_all_confirm, = [b for b in buttons if await get_text(document, b) == 'export all']
+    export_all_confirm, = [b for b in buttons if await get_text(document, b) == 'Export All']
     await export_all_confirm.click()
 
     logger.debug("Wait download of {} to {}", output_type, output_directory)
@@ -181,6 +181,7 @@ async def _download_rr_archive(document: Page,
 
 async def signin(document, config: Config, sleep_duration=1.):
     """Sign-in into Roam"""
+    
     logger.debug("Opening signin page")
     await document.goto('https://roamresearch.com/#/signin')
     await asyncio.sleep(sleep_duration)
@@ -204,12 +205,15 @@ async def signin(document, config: Config, sleep_duration=1.):
 
 async def go_to_database(document, database):
     """Go to the database page"""
+    
     url = f'https://roamresearch.com/#/app/{database}'
     logger.debug(f"Load database from url '{url}'")
     await document.goto(url)
 
 
 def _kill_child_process(timeout=50):
+    """Kills if timeout"""
+    
     procs = psutil.Process().children(recursive=True)
     if not procs:
         return

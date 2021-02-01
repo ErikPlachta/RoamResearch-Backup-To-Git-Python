@@ -127,7 +127,7 @@ async def _download_rr_archive(document: Page,
     await dot_button.click()
 
     logger.debug("Launch download popup")
-    divs_pb3 = await document.querySelectorAll(".bp3-icon-more")
+    divs_pb3 = await document.querySelectorAll("li .bp3-fill")
     export_all, = [b for b in divs_pb3 if await get_text(document, b) == 'Export All']
     await export_all.click()
     await asyncio.sleep(config.sleep_duration)

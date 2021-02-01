@@ -127,7 +127,7 @@ async def _download_rr_archive(document: Page,
     await dot_button.click()
 
     logger.debug("Launch download popup")
-    divs_pb3 = await document.querySelectorAll(".bp3-fill")
+    divs_pb3 = await document.querySelectorAll(".bp3-icon-more")
     export_all, = [b for b in divs_pb3 if await get_text(document, b) == 'Export All']
     await export_all.click()
     await asyncio.sleep(config.sleep_duration)
@@ -136,6 +136,7 @@ async def _download_rr_archive(document: Page,
         dropdown_button = await document.querySelector(".bp3-dialog .bp3-button-text")
         assert dropdown_button is not None
         dropdown_button_text = await get_text(document, dropdown_button)
+        
         # Defensive check if the interface change
         assert dropdown_button_text in ["Markdown", "JSON"], dropdown_button_text
         return dropdown_button, dropdown_button_text

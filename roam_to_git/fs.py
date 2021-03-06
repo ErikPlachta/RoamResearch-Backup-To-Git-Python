@@ -1,6 +1,19 @@
+"""
+    @author:: Matthieu Bizien
+    @name:: roam-to-git
+    @purpose:: ??
+    @source:: https://github.com/MatthieuBizien/roam-to-git
+    
+    
+    @contributor:: Erik Plachta
+    @contribution:: 
+"""
+
+import contextlib
 import datetime
 import json
 import platform
+import tempfile
 import zipfile
 from pathlib import Path
 from typing import Dict, List
@@ -100,5 +113,20 @@ def get_clean_path(directory: Path, file_name: str) -> Path:
     """Remove any special characters on the file name"""
     out = directory
     for name in file_name.split("/"):
+        if name == "..":
+            continue
         out = out / pathvalidate.sanitize_filename(name, platform=platform.system())
     return out
+
+
+@contextlib.contextmanager
+def create_temporary_directory(autodelete=True):
+    if autodelete:
+        with tempfile.TemporaryDirectory() as directory:
+            yield directory
+    else:
+        now = datetime.datetime.now().isoformat().replace(":", "-")
+        directory = Path("/tmp") / "roam-to-git" / now
+        directory.mkdir(parents=True)
+        yield directory
+        # No clean-up

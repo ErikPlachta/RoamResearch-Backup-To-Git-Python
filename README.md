@@ -4,6 +4,17 @@
 > This is a fork of [MatthieuBizen's repo 🧠](https://github.com/MatthieuBizien/roam-to-git), who brilliantly built a free 'stress free' utility that takes the guess work and complexity out of backing up. If you're as thankful I am, let him know, and [check his repo here](https://github.com/ErikPlachta/roam-to-git#automatic-roamresearch-backup).
 
 
+<hr />
+
+### This script automatically
+
+- Downloads a markdown archive of your RoamResearch workspace
+- Downloads a json archive of your RoamResearch workspace
+- Download the full EDN of your RoamResearch workspace
+- Unzips them to your git directory
+- Format your markdown, including with backlinks
+- Commits and push the difference to Github
+
 <!--
 # Automatic RoamResearch backup
 

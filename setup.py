@@ -5,13 +5,15 @@ from pkg_resources import parse_requirements
 setup(
     name='roam_to_git',
     packages=['roam_to_git'],
-    version='0.1',
+    version='0.2',
     license='MIT',
     description='Automatic RoamResearch backup to Git',
-    author='Erik Plachta',  # Type in your name
-    author_email='eplachta@gmail.com',  # Type in your E-Mail
-    url='https://github.com/ErikPlachta/RoamResearch-Complete-Backup-to-Git/',
-    download_url='https://github.com/ErikPlachta/RoamResearch-Complete-Backup-to-Git/archive/v0.1.tar.gz',
+    #author='Matthieu Bizien',  # Type in your name
+    #author_email='oao2005@gmail.com',  # Type in your E-Mail
+    author="Erik Plachta",
+    author_email="eplachta@gmail.com",
+    url='https://github.com/ErikPlachta/RoamResearch-Backup-To-Git-Python',
+    download_url='https://github.com/ErikPlachta/RoamResearch-Backup-To-Git-Python/archive/v0.1.tar.gz',
     keywords=['ROAMRESEARCH', 'GIT', 'BACKUP'],
     install_requires=[str(requirement) for requirement in
                       parse_requirements(open("requirements.txt"))],

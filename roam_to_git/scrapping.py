@@ -1,7 +1,7 @@
 """
     @author:: Matthieu Bizien
     @name:: roam-to-git
-    @purpose:: ??
+    @purpose:: Backup a RoamResearch Graph to Github
     @source:: https://github.com/MatthieuBizien/roam-to-git
     
     
@@ -19,18 +19,12 @@ from typing import List, Optional
 
 import psutil
 from loguru import logger
-
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
-
-##-------------------------------------------------------------
-##-- GLOBALS
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 
 ROAM_FORMATS = ("json", "markdown", "edn")
 
-##-------------------------------------------------------------
-##-- Browser class object 
 
 class Browser:
     FIREFOX = "Firefox"
@@ -133,9 +127,6 @@ class HTMLElement:
         return self.html_element.text
 
 
-##-------------------------------------------------------------
-##-- Config class object
-
 class Config:
     def __init__(self,
                  browser: str,
@@ -159,11 +150,7 @@ class Config:
         self.browser = getattr(Browser, browser.upper())
         self.browser_args = (browser_args or [])
 
-##-------------------------------------------------------------
-##-- Functions
 
-
-##-- Grabbing string outputs
 def download_rr_archive(output_type: str,
                         output_directory: Path,
                         config: Config,
@@ -190,7 +177,6 @@ def download_rr_archive(output_type: str,
         logger.debug("Closed browser {}", output_type)
 
 
-##-- Grabbing browser output
 def _download_rr_archive(browser: Browser,
                          output_type: str,
                          output_directory: Path,
@@ -272,29 +258,39 @@ def _download_rr_archive(browser: Browser,
     raise FileNotFoundError("Impossible to download {} in {}", output_type, output_directory)
 
 
-##-------------------------------------------------------------
-##-- Signing into Roam Research
-
-def signin(browser, config: Config, sleep_duration=1.):
+def signin(browser: Browser, config: Config, sleep_duration=1.):
     """Sign-in into Roam"""
     logger.debug("Opening signin page")
     browser.get('https://roamresearch.com/#/signin')
-    # increased to 5 seconds to handle sporadic second login screen refresh
-    time.sleep(6.)
 
-    logger.debug("Fill email '{}'", config.user)
-    email_elem = browser.find_element_by_css_selector("input[name='email']")
-    email_elem.send_keys(config.user)
+    logger.debug("Waiting for  email and passwork fields", config.user)
+    while True:
+        try:
+            email_elem = browser.find_element_by_css_selector("input[name='email']", check=False)
+            passwd_elem = browser.find_element_by_css_selector("input[name='password']")
 
-    logger.debug("Fill password")
-    passwd_elem = browser.find_element_by_css_selector("input[name='password']")
-    passwd_elem.send_keys(config.password)
-    passwd_elem.send_keys(Keys.RETURN)
+            logger.debug("Fill email '{}'", config.user)
+            email_elem.send_keys(config.user)
 
+            logger.debug("Fill password")
+            passwd_elem.send_keys(config.password)
 
-    
-##-------------------------------------------------------------
-##-- Navigate to database
+            logger.debug("Defensive check: verify that the user input field is correct")
+            time.sleep(sleep_duration)
+            email_elem = browser.find_element_by_css_selector("input[name='email']", check=False)
+            if email_elem.html_element.get_attribute('value') != config.user:
+                continue
+
+            logger.debug("Activating sign-in")
+            passwd_elem.send_keys(Keys.RETURN)
+            break
+        except NoSuchElementException:
+            logger.trace("NoSuchElementException: Retry getting the email field")
+            time.sleep(1)
+        except StaleElementReferenceException:
+            logger.trace("StaleElementReferenceException: Retry getting the email field")
+            time.sleep(1)
+
 
 def go_to_database(browser, database):
     """Go to the database page"""
@@ -302,10 +298,6 @@ def go_to_database(browser, database):
     logger.debug(f"Load database from url '{url}'")
     browser.get(url)
 
-    
-
-##-------------------------------------------------------------
-##-- Kill browser page if timeout happens
 
 def _kill_child_process(timeout=50):
     procs = psutil.Process().children(recursive=True)
@@ -327,9 +319,6 @@ def _kill_child_process(timeout=50):
             except psutil.NoSuchProcess:
                 pass
 
-
-##-------------------------------------------------------------
-##-- grab ZIP downloads from page to 
 
 def scrap(zip_path: Path, formats: List[str], config: Config):
     # Register to always kill child process when the script close, to not have zombie process.
